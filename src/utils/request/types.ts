@@ -10,9 +10,11 @@ type QueryParamValue =
 
 export type QueryParams = Record<string, QueryParamValue>;
 
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
 export interface ApiRoute<TData, TBody = unknown> {
   baseUrl?: string;
-  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  method?: HttpMethod;
   TBody?: TBody;
   path: string;
   TRes: TData;

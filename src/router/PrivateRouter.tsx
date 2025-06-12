@@ -37,11 +37,7 @@ export default function PrivateRouter() {
             href="/"
             className="flex items-center w-full h-full px-4 md:hidden"
           >
-            <img
-              className="w-auto h-8"
-              // src={careConfig.mainLogo?.dark}
-              alt="care logo"
-            />
+            <img className="w-auto h-8" alt="abdm phr logo" />
           </a>
         </div>
         <div className="p-3 mt-4" data-cui-page>
