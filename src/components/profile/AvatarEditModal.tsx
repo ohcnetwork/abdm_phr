@@ -218,7 +218,7 @@ export default function AvatarEditModal({
                         aspect={aspectRatio}
                         onCropChange={setCrop}
                         onCropComplete={(
-                          croppedArea: Area,
+                          _croppedArea: Area,
                           croppedAreaPixels: Area,
                         ) => {
                           setCroppedAreaPixels(croppedAreaPixels);
