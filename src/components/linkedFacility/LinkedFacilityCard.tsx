@@ -13,9 +13,9 @@ export default function LinkedFacilityCard({ data }: LinkedFacilityCardProps) {
   return (
     <Link
       href={`/linked-facilities/${data.hip.id}`}
-      className="block h-[160px] hover:scale-[1.02] transition-transform"
+      className="block h-[160px]"
     >
-      <Card className="gap-2 h-full border  transition-colors rounded-xl shadow-sm">
+      <Card className="gap-2 h-full border hover:shadow-md transition-colors rounded-xl shadow-sm">
         <CardHeader className="flex items-center gap-3 pb-2">
           <div className="p-2 bg-primary-100 rounded-lg">
             <Hospital className="w-6 h-6 text-primary" />

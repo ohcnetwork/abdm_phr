@@ -38,6 +38,9 @@ export const consent = {
   revoke: API<ConsentUpdateBaseResponse, ConsentRevokeRequest>(
     "POST /phr/consent/revoke",
   ),
+  setAutoApproval: API<ConsentUpdateBaseResponse>(
+    "POST /phr/consent/auto_approve/setup",
+  ),
   updateAutoApproval: API<ConsentUpdateBaseResponse, AutoApprovalUpdateRequest>(
     "POST /phr/consent/auto_approve/{autoApprovalId}/update",
   ),

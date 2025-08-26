@@ -109,6 +109,10 @@
   button[role="combobox"] {
     @apply w-full;
   }
+
+  [data-slot="dialog-overlay"] {
+    @apply bg-white/50 backdrop-blur-xs;
+  }
 }
 
 /* Tailwind v4 theme configuration */

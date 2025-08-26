@@ -347,6 +347,7 @@ export default function ConsentDetail({ id, type }: ConsentDetailProps) {
     } else {
       setEditedData(updatedData);
       toast.success("Changes saved successfully.");
+      setActiveDialog(null);
     }
   };
 

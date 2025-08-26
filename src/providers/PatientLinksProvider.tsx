@@ -15,7 +15,7 @@ export default function PatientLinksProvider({ children }: Props) {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["patientinks"],
+    queryKey: ["patientLinks"],
     queryFn: query(routes.gateway.listPatientLinks, { silent: true }),
     retry: false,
   });

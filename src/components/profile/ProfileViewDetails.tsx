@@ -1,5 +1,5 @@
 import { Ellipsis, Mail, Phone } from "lucide-react";
-import { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -15,6 +15,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+
+import UpdateEmailDialog from "@/components/profile/dialogs/UpdateEmailDialog";
+import UpdateMobileDialog from "@/components/profile/dialogs/UpdateMobileDialog";
 
 import { PhrProfile } from "@/types/profile";
 
@@ -113,15 +116,10 @@ export const BasicInfo = (user: PhrProfile) => {
   );
 };
 
-export const ContactInfo = ({
-  user,
-  setShowUpdateMobile,
-  setShowUpdateEmail,
-}: {
-  user: PhrProfile;
-  setShowUpdateMobile: Dispatch<SetStateAction<boolean>>;
-  setShowUpdateEmail: Dispatch<SetStateAction<boolean>>;
-}) => {
+export const ContactInfo = (user: PhrProfile) => {
+  const [showMobileDialog, setShowMobileDialog] = useState(false);
+  const [showEmailDialog, setShowEmailDialog] = useState(false);
+
   return (
     <SectionWrapper>
       <div className="flex justify-between">
@@ -136,7 +134,7 @@ export const ContactInfo = ({
             <DropdownMenuItem asChild>
               <Button
                 size="sm"
-                onClick={() => setShowUpdateEmail?.(true)}
+                onClick={() => setShowEmailDialog(true)}
                 variant="ghost"
                 className="w-full flex flex-row justify-stretch items-center"
               >
@@ -147,7 +145,7 @@ export const ContactInfo = ({
             <DropdownMenuItem asChild>
               <Button
                 size="sm"
-                onClick={() => setShowUpdateMobile?.(true)}
+                onClick={() => setShowMobileDialog(true)}
                 variant="ghost"
                 className="w-full flex flex-row justify-stretch items-center"
               >
@@ -162,6 +160,13 @@ export const ContactInfo = ({
         <LabelValue id="email" label="Email" value={user.email} />
         <LabelValue id="phone_number" label="Mobile" value={user.mobile} />
       </div>
+
+      <UpdateMobileDialog
+        open={showMobileDialog}
+        setOpen={setShowMobileDialog}
+      />
+
+      <UpdateEmailDialog open={showEmailDialog} setOpen={setShowEmailDialog} />
     </SectionWrapper>
   );
 };
@@ -169,7 +174,7 @@ export const ContactInfo = ({
 export const LocationInfo = (user: PhrProfile) => {
   return (
     <SectionWrapper>
-      <Badge text="Location" />
+      <Badge text="Location Information" />
       <div className="space-y-4">
         <LabelValue
           id="address"

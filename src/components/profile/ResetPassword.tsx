@@ -14,8 +14,7 @@ import { Form } from "@/components/ui/form";
 import { SetPasswordSection } from "@/components/profile/ProfileFormSections";
 
 import routes from "@/api";
-import { PasswordUpdateResponse } from "@/types/profile";
-import { PhrProfile } from "@/types/profile";
+import { PasswordUpdateResponse, PhrProfile } from "@/types/profile";
 import { mutate } from "@/utils/request/request";
 
 export default function ResetPassword({ abhaAddress }: PhrProfile) {

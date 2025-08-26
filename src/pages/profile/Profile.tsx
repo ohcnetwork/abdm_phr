@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import {
   CircleCheckIcon,
   Link2Icon,
@@ -18,8 +17,7 @@ import {
 
 import { Avatar } from "@/components/common/Avatar";
 import Page from "@/components/common/Page";
-import AbhaUnlinkDialog from "@/components/profile/AbhaUnlinkDialog";
-import DownloadAbhaDialog from "@/components/profile/DownloadAbhaDialog";
+import AutoApprovalSetup from "@/components/profile/AutoApprovalSetup";
 import EditProfileSheet from "@/components/profile/EditProfileSheet";
 import ProfileActions from "@/components/profile/ProfileActions";
 import ProfileColumns from "@/components/profile/ProfileColumns";
@@ -29,18 +27,16 @@ import {
   LocationInfo,
 } from "@/components/profile/ProfileViewDetails";
 import ResetPassword from "@/components/profile/ResetPassword";
-import SelectPreferredAbhaDialog from "@/components/profile/SelectPreferredAbhaDialog";
-import SwitchProfileDialog from "@/components/profile/SwitchProfileDialog";
-import UpdateEmailDialog from "@/components/profile/UpdateEmailDialog";
-import UpdateMobileDialog from "@/components/profile/UpdateMobileDialog";
 import UserAvatar from "@/components/profile/UserAvatar";
+import AbhaUnlinkDialog from "@/components/profile/dialogs/AbhaUnlinkDialog";
+import DownloadAbhaDialog from "@/components/profile/dialogs/DownloadAbhaDialog";
+import SelectPreferredAbhaDialog from "@/components/profile/dialogs/SelectPreferredAbhaDialog";
+import SwitchProfileDialog from "@/components/profile/dialogs/SwitchProfileDialog";
 
 import { useAuthContext } from "@/hooks/useAuth";
 
-import routes from "@/api";
 import { KycStatuses, PhrProfile } from "@/types/profile";
 import { getProfilePhotoUrl } from "@/utils";
-import { query } from "@/utils/request/request";
 
 function KYCStatusBadge({ isVerified }: { isVerified: boolean }) {
   return (
@@ -100,7 +96,7 @@ function ProfileHeader({
     <div className="flex gap-4 items-center">
       <Avatar
         imageUrl={getProfilePhotoUrl(userData.profilePhoto)}
-        name={userData.abhaAddress}
+        name={userData.fullName}
         className="size-20 shrink-0 max-sm:size-23"
       />
 
@@ -191,25 +187,12 @@ function AbhaManagementSection({
 export default function Profile() {
   const { user, switchProfileEnabled } = useAuthContext();
 
-  const {
-    data: healthIdData,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["healthIdData"],
-    queryFn: query(routes.profile.healthIdData),
-  });
-
-  console.log(healthIdData, isLoading, isError);
-
   const [modals, setModals] = useState({
     editProfile: false,
     switchProfile: false,
     selectPreferredAbha: false,
     downloadAbha: false,
     abhaUnlink: false,
-    updateMobile: false,
-    updateEmail: false,
   });
 
   const toggleModal = (modalName: keyof typeof modals) => {
@@ -218,14 +201,6 @@ export default function Profile() {
 
   const isKYCVerified = user?.kycStatus === KycStatuses.VERIFIED;
 
-  const ContactInfoWithHandlers = (user: PhrProfile) => (
-    <ContactInfo
-      user={user}
-      setShowUpdateMobile={() => toggleModal("updateMobile")}
-      setShowUpdateEmail={() => toggleModal("updateEmail")}
-    />
-  );
-
   if (!user) {
     return null;
   }
@@ -233,10 +208,8 @@ export default function Profile() {
   return (
     <Page title="ABHA Profile" hideTitleOnPage>
       <div className="mx-auto space-y-8">
-        {/* Profile Header */}
         <ProfileHeader userData={user} isKYCVerified={isKYCVerified} />
 
-        {/* Profile Actions */}
         <div className="flex gap-3 justify-end flex-wrap">
           <Button
             variant="outline"
@@ -258,11 +231,10 @@ export default function Profile() {
           />
         </div>
 
-        {/* Profile Sections */}
         <div className="space-y-8">
           <ProfileColumns
-            heading="Profile Picture"
-            note="Upload and manage your profile picture."
+            heading="Edit Avatar"
+            note="View or update your profile picture."
             Child={UserAvatar}
             childProps={user}
           />
@@ -276,34 +248,39 @@ export default function Profile() {
 
           <ProfileColumns
             heading="Contact Information"
-            note="Manage your contact details for communication."
-            Child={ContactInfoWithHandlers}
+            note="View or update your contact information."
+            Child={ContactInfo}
             childProps={user}
           />
 
           <ProfileColumns
             heading="Location Information"
-            note="Your address and location details for service delivery."
+            note="View or update your address and location details."
             Child={LocationInfo}
             childProps={user}
           />
 
           <ProfileColumns
+            heading="Auto Approval"
+            note="Set up and manage auto approval of consent requests."
+            Child={AutoApprovalSetup}
+            childProps={user}
+          />
+
+          <ProfileColumns
             heading="Security"
-            note="Manage your account password and security settings."
+            note="Set a new password or update the current one."
             Child={ResetPassword}
             childProps={user}
           />
         </div>
 
-        {/* ABHA Management Section */}
         <AbhaManagementSection
           isKYCVerified={isKYCVerified}
           onAction={() => toggleModal("abhaUnlink")}
         />
       </div>
 
-      {/* All Modals */}
       <EditProfileSheet
         open={modals.editProfile}
         setOpen={() => toggleModal("editProfile")}
@@ -320,16 +297,6 @@ export default function Profile() {
       <DownloadAbhaDialog
         open={modals.downloadAbha}
         setOpen={() => toggleModal("downloadAbha")}
-      />
-
-      <UpdateMobileDialog
-        open={modals.updateMobile}
-        setOpen={() => toggleModal("updateMobile")}
-      />
-
-      <UpdateEmailDialog
-        open={modals.updateEmail}
-        setOpen={() => toggleModal("updateEmail")}
       />
 
       <SelectPreferredAbhaDialog

@@ -79,7 +79,10 @@ const SwitchProfile = ({
 
       handleAuthSuccess(data);
 
-      await queryClient.invalidateQueries();
+      await Promise.all([
+        queryClient.resetQueries({ queryKey: ["user"] }),
+        queryClient.resetQueries({ queryKey: ["patientLinks"] }),
+      ]);
 
       navigate("/");
     },

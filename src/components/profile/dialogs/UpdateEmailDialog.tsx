@@ -27,7 +27,7 @@ const UpdateEmailDialog = ({ open, setOpen }: UpdateEmailDialogProps) => {
 
   const handleOtpSuccess = () => {
     setOpen(false);
-    toast.success("Email updated successfully. Please login again.");
+    toast.success("Your email was updated. Please log in again to continue.");
     logout(false);
   };
 
