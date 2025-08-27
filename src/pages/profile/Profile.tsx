@@ -2,9 +2,12 @@ import {
   CircleCheckIcon,
   Link2Icon,
   SquarePen,
+  Star,
   TriangleAlert,
 } from "lucide-react";
 import { useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,20 +41,42 @@ import { useAuthContext } from "@/hooks/useAuth";
 import { KycStatuses, PhrProfile } from "@/types/profile";
 import { getProfilePhotoUrl } from "@/utils";
 
+function PreferredBadge({ isPreferred }: { isPreferred: boolean }) {
+  if (!isPreferred) return null;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Badge
+          variant="outline"
+          className="flex items-center mt-0.5 bg-blue-50 text-blue-600 border-blue-200"
+        >
+          <Star className="size-3" aria-hidden="true" />
+          Preferred
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="text-white">
+        Preferred ABHA Address
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
 function KYCStatusBadge({ isVerified }: { isVerified: boolean }) {
   return (
     <Badge
       variant="outline"
-      className={`flex items-center whitespace-nowrap mt-0.5 ${
+      className={cn(
+        "flex items-center mt-0.5",
         isVerified
           ? "bg-green-50 text-primary-500 border-primary-200"
-          : "bg-yellow-50 text-warning-500 border-yellow-200"
-      }`}
+          : "bg-yellow-50 text-warning-500 border-yellow-200",
+      )}
     >
       {isVerified ? (
-        <CircleCheckIcon className="h-3 w-3 mr-2" aria-hidden="true" />
+        <CircleCheckIcon className="size-3" aria-hidden="true" />
       ) : (
-        <TriangleAlert className="h-3 w-3 mr-2" aria-hidden="true" />
+        <TriangleAlert className="size-3" aria-hidden="true" />
       )}
       <span>{isVerified ? "KYC Verified" : "Self Declared"}</span>
     </Badge>
@@ -93,31 +118,44 @@ function ProfileHeader({
   isKYCVerified: boolean;
 }) {
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex gap-4 items-start">
       <Avatar
         imageUrl={getProfilePhotoUrl(userData.profilePhoto)}
         name={userData.fullName}
-        className="size-20 shrink-0 max-sm:size-23"
+        className="size-27 shrink-0 sm:size-24"
       />
 
-      <div className="flex gap-1 items-start flex-wrap">
-        <div className="flex flex-col  space-x-2 gap-1">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <h1 className="text-xl font-bold truncate">
+      <div className="flex-1 min-w-0">
+        <div className="space-y-2">
+          <div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <h1 className="text-lg sm:text-xl font-bold truncate">
+                  {userData.abhaAddress}
+                </h1>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="text-white">
                 {userData.abhaAddress}
-              </h1>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="text-white">
-              {userData.abhaAddress}
-            </TooltipContent>
-          </Tooltip>
-          <AbhaNumberDisplay
-            isKYCVerified={isKYCVerified}
-            abhaNumber={userData.abhaNumber}
-          />
+              </TooltipContent>
+            </Tooltip>
+
+            <div className="mt-1">
+              <AbhaNumberDisplay
+                isKYCVerified={isKYCVerified}
+                abhaNumber={userData.abhaNumber}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <KYCStatusBadge isVerified={isKYCVerified} />
+            <PreferredBadge
+              isPreferred={
+                userData.preferredAbhaAddress === userData.abhaAddress
+              }
+            />
+          </div>
         </div>
-        <KYCStatusBadge isVerified={isKYCVerified} />
       </div>
     </div>
   );
@@ -292,6 +330,7 @@ export default function Profile() {
         open={modals.switchProfile}
         setOpen={() => toggleModal("switchProfile")}
         currentAbhaAddress={user.abhaAddress}
+        preferredAbhaAddress={user.preferredAbhaAddress || ""}
       />
 
       <DownloadAbhaDialog

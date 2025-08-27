@@ -25,6 +25,7 @@ type SwitchProfileProps = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   currentAbhaAddress: string;
+  preferredAbhaAddress: string;
 };
 
 function AuthEmptyState() {
@@ -44,6 +45,7 @@ const SwitchProfile = ({
   open,
   setOpen,
   currentAbhaAddress,
+  preferredAbhaAddress,
 }: SwitchProfileProps) => {
   const queryClient = useQueryClient();
 
@@ -116,6 +118,7 @@ const SwitchProfile = ({
           onContinue={handleSwitchProfile}
           continueLabel="Switch Profile"
           emptyState={<AuthEmptyState />}
+          preferredAbhaAddress={preferredAbhaAddress}
         />
       </DialogContent>
     </Dialog>

@@ -48,7 +48,7 @@ function AddFacilityDetailHeader({
 }
 
 export default function AddFacilityDetail({ id }: { id: string }) {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(4);
 
   const [secondStepData, setSecondStepData] =
     useState<UserInitLinkingDiscoverResponse | null>(null);
