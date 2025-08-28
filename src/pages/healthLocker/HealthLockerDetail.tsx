@@ -104,7 +104,7 @@ export default function HealthLockerDetail({ id }: { id: string }) {
             {data.subscriptions.map((subscription) => (
               <HealthLockerDetailCard
                 key={subscription.subscriptionId}
-                isActive={subscription.status === "GRANTED"}
+                isActive={subscription.status?.toUpperCase() === "GRANTED"}
                 onClick={() => {
                   navigate(
                     `/consents/${subscription.subscriptionId}/subscription-artefact`,

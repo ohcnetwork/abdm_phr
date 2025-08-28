@@ -59,7 +59,7 @@ export const CONSENT_STATUS_VARIANTS = {
   [ConsentStatuses.GRANTED]: "green",
   [ConsentStatuses.DENIED]: "destructive",
   [ConsentStatuses.EXPIRED]: "secondary",
-  [ConsentStatuses.REVOKED]: "secondary",
+  [ConsentStatuses.REVOKED]: "orange",
 } as const;
 
 export const CONSENT_HI_TYPES_ICONS = {

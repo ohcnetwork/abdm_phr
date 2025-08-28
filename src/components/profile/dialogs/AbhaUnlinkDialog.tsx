@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -39,6 +40,9 @@ const AbhaUnlinkDialog = ({
 
   const onVerifyOtpSuccess = () => {
     setOpen(false);
+    toast.success(
+      "Your ABHA number has been updated. Please log in again to continue.",
+    );
     logout(false);
   };
 

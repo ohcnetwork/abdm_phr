@@ -1,3 +1,5 @@
+import { Calendar, FileText } from "lucide-react";
+
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -42,41 +44,52 @@ const FileRow = ({
   const Icon = FILE_ICONS[filetype];
 
   const createdDate = dayjs(file.created_date).format("DD MMM YYYY, hh:mm A");
+  const shortDate = dayjs(file.created_date).format("DD MMM YYYY");
 
   if (variant === "card") {
     return (
       <Card
         key={file.id}
-        className="overflow-hidden bg-white hover:shadow-md transition-shadow"
+        className="group overflow-hidden bg-white hover:shadow-md py-3"
       >
-        <CardContent className="p-4 space-y-4">
-          <div className="flex items-start gap-3">
-            <span className="p-2 rounded-full bg-gray-100 shrink-0">
-              <Icon className="size-4" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="font-medium text-gray-900 truncate cursor-help">
-                    {fileName}
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent className="text-white">
-                  <p>{fileName}</p>
-                </TooltipContent>
-              </Tooltip>
-              <div className="mt-1 text-sm text-gray-500">{filetype}</div>
+        <CardContent className="p-5">
+          <div className="flex items-start justify-between gap-3 mb-4">
+            <div className="flex items-start gap-3 min-w-0 flex-1">
+              <div className="p-2.5 rounded-xl flex-shrink-0 bg-gray-50">
+                <Icon className="size-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-semibold text-gray-900 truncate text-base leading-tight">
+                  {fileName}
+                </h3>
+                <div className="mt-1 flex items-center gap-1">
+                  <FileText className="size-3 text-gray-400" />
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                    {filetype}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex-shrink-0">
+              <UploadedRecordActions file={file} fileUpload={fileUpload} />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-2 text-sm">
-            <div>
-              <div className="text-gray-500 text-xs">Created</div>
-              <div className="font-medium">{createdDate}</div>
+          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Calendar className="size-4 text-gray-400" />
+              <span className="font-medium">{shortDate}</span>
             </div>
-          </div>
-          <div className="pt-2 flex justify-end">
-            <UploadedRecordActions file={file} fileUpload={fileUpload} />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="text-xs text-gray-500">
+                  {dayjs(file.created_date).format("hh:mm A")}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent className="text-white">
+                <p>Created: {createdDate}</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </CardContent>
       </Card>
@@ -96,9 +109,7 @@ const FileRow = ({
           {fileName.length > 25 ? (
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="text-gray-900 truncate block cursor-help">
-                  {fileName}
-                </span>
+                <span className="text-gray-900 truncate block">{fileName}</span>
               </TooltipTrigger>
               <TooltipContent className="text-white">{fileName}</TooltipContent>
             </Tooltip>
@@ -113,7 +124,7 @@ const FileRow = ({
       <TableCell className="group-hover:bg-gray-50 bg-white">
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="cursor-help">{createdDate}</span>
+            <span>{createdDate}</span>
           </TooltipTrigger>
           <TooltipContent className="text-white">{createdDate}</TooltipContent>
         </Tooltip>
