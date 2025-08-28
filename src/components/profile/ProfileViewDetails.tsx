@@ -105,11 +105,19 @@ export const BasicInfo = (user: PhrProfile) => {
           value={user.middleName}
         />
         <LabelValue id="last_name" label="Last Name" value={user.lastName} />
-        <LabelValue
-          id="date_of_birth"
-          label="Date of Birth"
-          value={user.dateOfBirth}
-        />
+        {user.dateOfBirth ? (
+          <LabelValue
+            id="date_of_birth"
+            label="Date of Birth"
+            value={user.dateOfBirth}
+          />
+        ) : (
+          <LabelValue
+            id="year_of_birth"
+            label="Year of Birth"
+            value={user.yearOfBirth}
+          />
+        )}
         <LabelValue id="gender" label="Gender" value={user.gender} />
       </div>
     </SectionWrapper>

@@ -27,18 +27,17 @@ export default function UserAvatar(user: PhrProfile) {
   });
 
   const handlePhotoUpdate = (profilePhoto: string) => {
-    const [year = "", month = "", day = ""] = user.dateOfBirth
-      .split("-")
-      .reverse();
+    const [day = "", month = "", year = ""] =
+      user.dateOfBirth?.split("-") || [];
 
     updateProfileMutation.mutate({
       first_name: user.firstName,
       middle_name: user.middleName || "",
       last_name: user.lastName || "",
       gender: user.gender,
-      year_of_birth: year,
-      month_of_birth: month,
-      day_of_birth: day,
+      year_of_birth: year || user.yearOfBirth,
+      month_of_birth: month || user.monthOfBirth || "",
+      day_of_birth: day || user.dayOfBirth || "",
       state_code: user.stateCode,
       state_name: user.stateName,
       district_code: user.districtCode,
