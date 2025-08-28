@@ -11,6 +11,7 @@ import FileRenameDialog from "@/components/dashboard/dialogs/FileRenameDialog";
 import { useAuthContext } from "@/hooks/useAuth";
 
 import {
+  BACKEND_ALLOWED_EXTENSIONS,
   DEFAULT_MAX_FILE_SIZE,
   FILE_EXTENSIONS,
   PREVIEWABLE_FILE_EXTENSIONS,
@@ -427,7 +428,7 @@ export default function useFileUpload(
 
       const response = await fetch(fileData.read_signed_url);
       if (!response.ok) {
-        throw new Error(`Download failed: ${response.statusText}`);
+        throw new Error("Network response was not ok.");
       }
 
       const data = await response.blob();
@@ -435,7 +436,17 @@ export default function useFileUpload(
 
       const a = document.createElement("a");
       a.href = blobUrl;
-      a.download = file.name + "." + file.extension || "downloaded-file";
+
+      let fileName = file.name || "downloaded-file";
+      if (file.extension && !fileName.endsWith(file.extension)) {
+        fileName = `${fileName}.${file.extension.replace(".", "")}`;
+      } else if (!file.extension) {
+        const urlExtension = getExtension(fileData.read_signed_url);
+        if (urlExtension && BACKEND_ALLOWED_EXTENSIONS.includes(urlExtension)) {
+          fileName = `${fileName}.${urlExtension}`;
+        }
+      }
+      a.download = fileName;
       document.body.appendChild(a);
       a.click();
 
