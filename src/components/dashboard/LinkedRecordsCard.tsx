@@ -18,7 +18,7 @@ export default function LinkedRecordsCard({ data }: LinkedRecordsCardProps) {
       <Card className="gap-2 h-full border hover:shadow-md transition-colors rounded-xl shadow-sm">
         <CardHeader className="flex items-center gap-3 pb-2">
           <div className="p-2 bg-primary-100 rounded-lg">
-            <Hospital className="w-6 h-6 text-primary" />
+            <Hospital className="size-6 text-primary" />
           </div>
           <CardTitle className="text-lg font-medium text-gray-800 line-clamp-1">
             {data.hip.name}

@@ -50,18 +50,25 @@ const FileRow = ({
     return (
       <Card
         key={file.id}
-        className="group overflow-hidden bg-white hover:shadow-md py-3"
+        className="group overflow-hidden bg-white hover:shadow-md transition-shadow"
       >
-        <CardContent className="p-5">
-          <div className="flex items-start justify-between gap-3 mb-4">
-            <div className="flex items-start gap-3 min-w-0 flex-1">
+        <CardContent className="py-2">
+          <div className="space-y-3 mb-4">
+            <div className="flex items-start gap-3">
               <div className="p-2.5 rounded-xl flex-shrink-0 bg-gray-50">
                 <Icon className="size-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="font-semibold text-gray-900 truncate text-base leading-tight">
-                  {fileName}
-                </h3>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <h3 className="font-semibold text-gray-900 text-base leading-tight line-clamp-2 cursor-help">
+                      {fileName}
+                    </h3>
+                  </TooltipTrigger>
+                  <TooltipContent className="text-white max-w-xs">
+                    <p className="break-all">{fileName}</p>
+                  </TooltipContent>
+                </Tooltip>
                 <div className="mt-1 flex items-center gap-1">
                   <FileText className="size-3 text-gray-400" />
                   <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
@@ -70,7 +77,8 @@ const FileRow = ({
                 </div>
               </div>
             </div>
-            <div className="flex-shrink-0">
+
+            <div className="flex justify-end">
               <UploadedRecordActions file={file} fileUpload={fileUpload} />
             </div>
           </div>
@@ -82,7 +90,7 @@ const FileRow = ({
             </div>
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="text-xs text-gray-500">
+                <span className="text-[13px] text-gray-500 cursor-help">
                   {dayjs(file.created_date).format("hh:mm A")}
                 </span>
               </TooltipTrigger>
@@ -109,9 +117,13 @@ const FileRow = ({
           {fileName.length > 25 ? (
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="text-gray-900 truncate block">{fileName}</span>
+                <span className="text-gray-900 truncate block cursor-help">
+                  {fileName}
+                </span>
               </TooltipTrigger>
-              <TooltipContent className="text-white">{fileName}</TooltipContent>
+              <TooltipContent className="text-white max-w-xs">
+                <p className="break-all">{fileName}</p>
+              </TooltipContent>
             </Tooltip>
           ) : (
             <span className="text-gray-900 truncate block">{fileName}</span>
@@ -124,7 +136,7 @@ const FileRow = ({
       <TableCell className="group-hover:bg-gray-50 bg-white">
         <Tooltip>
           <TooltipTrigger asChild>
-            <span>{createdDate}</span>
+            <span className="cursor-help">{createdDate}</span>
           </TooltipTrigger>
           <TooltipContent className="text-white">{createdDate}</TooltipContent>
         </Tooltip>

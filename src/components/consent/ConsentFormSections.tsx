@@ -288,7 +288,12 @@ export function HipSelector({
               )}
             >
               <CollapsibleTrigger asChild>
-                <div className="flex items-center justify-between w-full p-4 cursor-pointer">
+                <div
+                  className={cn(
+                    "flex items-center justify-between w-full p-4",
+                    showContexts && "cursor-pointer",
+                  )}
+                >
                   <div className="flex items-center gap-3">
                     <div
                       className={cn(

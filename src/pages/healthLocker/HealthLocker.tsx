@@ -14,27 +14,6 @@ import { CardGridSkeleton } from "@/common/loaders/SkeletonLoader";
 import routes from "@/api";
 import { query } from "@/utils/request/request";
 
-// const tempLockers = [
-//   {
-//     id: 1,
-//     lockerId: "1",
-//     lockerName: "Sandbox Test Hospital",
-//     patientId: "1",
-//     dateCreated: "2025-08-17T00:00:00.000Z",
-//     dateModified: "2025-08-17T00:00:00.000Z",
-//     isActive: true,
-//   },
-//   {
-//     id: 2,
-//     lockerId: "2",
-//     lockerName: "DriefCase",
-//     patientId: "2",
-//     dateCreated: "2025-08-17T00:00:00.000Z",
-//     dateModified: "2025-08-17T00:00:00.000Z",
-//     isActive: true,
-//   },
-// ];
-
 function HealthLockerHeader({ onAddClick }: { onAddClick: () => void }) {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
