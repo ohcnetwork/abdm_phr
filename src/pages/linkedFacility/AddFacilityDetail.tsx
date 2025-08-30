@@ -4,8 +4,14 @@ import { navigate } from "raviger";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { ErrorFallback } from "@/components/ui/error-fallback";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import Page from "@/components/common/Page";
 import DiscoverRecordsStep from "@/components/linkedFacility/DiscoverRecordsStep";
@@ -13,8 +19,6 @@ import LinkFacilitySuccessStep from "@/components/linkedFacility/LinkFacilitySuc
 import OtpVerificationStep from "@/components/linkedFacility/OtpVerificationStep";
 import SearchRecordsStep from "@/components/linkedFacility/SearchRecordsStep";
 import StepIndicator from "@/components/linkedFacility/StepIndicator";
-
-import { CardListSkeleton } from "@/common/loaders/SkeletonLoader";
 
 import routes from "@/api";
 import {
@@ -48,7 +52,7 @@ function AddFacilityDetailHeader({
 }
 
 export default function AddFacilityDetail({ id }: { id: string }) {
-  const [step, setStep] = useState(4);
+  const [step, setStep] = useState(1);
 
   const [secondStepData, setSecondStepData] =
     useState<UserInitLinkingDiscoverResponse | null>(null);
@@ -69,7 +73,32 @@ export default function AddFacilityDetail({ id }: { id: string }) {
       <Page title="Loading..." hideTitleOnPage>
         <div className="container mx-auto max-w-4xl space-y-6">
           <AddFacilityDetailHeader />
-          <CardListSkeleton count={4} />
+          <Card className="min-h-[400px]">
+            <StepIndicator step={1} />
+            <CardHeader>
+              <Skeleton className="h-6 w-40" />
+              <Skeleton className="h-4 w-80" />
+            </CardHeader>
+            <CardContent className="animate-enter">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {[...Array(6)].map((_, index) => (
+                  <div key={index} className="space-y-1.5">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-10 w-full rounded-md" />
+                  </div>
+                ))}
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+                <div className="sm:col-span-2 space-y-2">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-10 w-full rounded-md" />
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="mt-2">
+              <Skeleton className="h-11 w-full rounded-md" />
+            </CardFooter>
+          </Card>
         </div>
       </Page>
     );

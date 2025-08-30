@@ -43,7 +43,7 @@ import routes from "@/api";
 import { getProfilePhotoUrl } from "@/utils";
 import { query } from "@/utils/request/request";
 
-const items = (unreadCount: number) => [
+const items = (unreadCount: number | undefined) => [
   {
     title: "My Records",
     url: "/my-records",
@@ -82,7 +82,7 @@ export function AppSidebar() {
   const { isMobile, setOpenMobile, open } = useSidebar();
 
   const { data: unreadCount } = useQuery({
-    queryKey: ["notidicationCount"],
+    queryKey: ["notificationUnreadCount"],
     queryFn: query(routes.notification.unreadCount, {
       silent: true,
     }),
@@ -105,25 +105,33 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items(unreadCount?.unread_count ?? 0).map((item) => (
+              {items(unreadCount?.unread_count).map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    tooltip={item.title}
+                    tooltip={{
+                      children: item.title,
+                      className: "text-white",
+                    }}
                     className="text-gray-600 transition font-normal hover:bg-gray-200 hover:text-green-700"
                   >
                     <ActiveLink
                       href={item.url}
-                      activeClass="bg-white text-green-700 shadow-sm"
+                      activeClass="bg-white text-green-700 shadow-sm relative"
                     >
                       {item.icon}
-                      <span className="group-data-[collapsible=icon]:hidden ml-1 flex items-center gap-1">
+
+                      {!!item.badge && (
+                        <span className="hidden group-data-[collapsible=icon]:block absolute top-2 right-2 size-2 rounded-full bg-red-500" />
+                      )}
+
+                      <span className="ml-1 flex w-full items-center justify-between group-data-[collapsible=icon]:hidden">
                         {item.title}
-                        {item.badge ? (
-                          <span className="inline-flex items-center justify-center rounded-full bg-primary/10 text-primary text-[10px] font-medium px-1.5 py-0.5 mt-1">
+                        {!!item.badge && (
+                          <span className="inline-flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] font-medium px-1.5 py-0.5 mt-1">
                             {item.badge}
                           </span>
-                        ) : null}
+                        )}
                       </span>
                     </ActiveLink>
                   </SidebarMenuButton>

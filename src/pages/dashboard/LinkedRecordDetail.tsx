@@ -217,14 +217,10 @@ const MyRecordDetail = ({ hip_id }: MyRecordDetailProps) => {
             }
 
             return (
-              <Card
+              <HIProfile
                 key={record.care_context_reference}
-                className="overflow-hidden"
-              >
-                <CardContent className="p-0">
-                  <HIProfile bundle={parsedData} />
-                </CardContent>
-              </Card>
+                bundle={parsedData}
+              />
             );
           })}
         </div>
