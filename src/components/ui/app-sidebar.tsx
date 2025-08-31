@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { ActiveLink, navigate, useLocationChange } from "raviger";
 
+import { cn } from "@/lib/utils";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -122,14 +124,19 @@ export function AppSidebar() {
                       {item.icon}
 
                       {!!item.badge && (
-                        <span className="hidden group-data-[collapsible=icon]:block absolute top-2 right-2 size-2 rounded-full bg-red-500" />
+                        <span className="hidden group-data-[collapsible=icon]:block absolute top-2 right-2 size-2 rounded-full bg-red-400" />
                       )}
 
                       <span className="ml-1 flex w-full items-center justify-between group-data-[collapsible=icon]:hidden">
                         {item.title}
                         {!!item.badge && (
-                          <span className="inline-flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] font-medium px-1.5 py-0.5 mt-1">
-                            {item.badge}
+                          <span
+                            className={cn(
+                              "inline-flex items-center justify-center rounded-full bg-red-400 text-white text-[10px] font-medium px-1.5 py-0.5 mt-1",
+                              item.badge < 10 ? "px-2" : "px-1.5",
+                            )}
+                          >
+                            {item.badge > 99 ? "99+" : item.badge}
                           </span>
                         )}
                       </span>

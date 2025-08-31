@@ -15,6 +15,8 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
+import { usePatientLinks } from "@/hooks/usePatientLinks";
+
 import {
   CONSENT_HI_TYPES_ICONS,
   ConsentHITypes,
@@ -185,6 +187,7 @@ export function ConsentHIPDetails({
   showContexts: boolean;
   hips: ConsentLinks[];
 }) {
+  const { getHipName } = usePatientLinks();
   return (
     <Card className="rounded-lg">
       <CardHeader>
@@ -205,7 +208,9 @@ export function ConsentHIPDetails({
                   </div>
                   <div>
                     <span className="text-sm font-medium text-gray-800">
-                      {facility.hip.name || "N/A"}
+                      {facility.hip.name ||
+                        getHipName(facility.hip.id) ||
+                        "N/A"}
                     </span>
                     {showContexts && facility.careContexts && (
                       <p className="text-xs text-gray-500">

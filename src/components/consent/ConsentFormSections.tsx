@@ -12,6 +12,9 @@ import {
 } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+import { usePatientLinks } from "@/hooks/usePatientLinks";
 
 import { ConsentHITypes, ConsentLinks } from "@/types/consent";
 import { SubscriptionCategories } from "@/types/subscription";
@@ -39,6 +42,7 @@ export function ConsentDurationSection({
           <Label>Valid From</Label>
           <Input
             type="date"
+            max={dayjs().format("YYYY-MM-DD")}
             value={dateQueryString(fromDate)}
             onChange={(e) => onDateChange(e.target.value, "fromDate")}
           />
@@ -47,7 +51,7 @@ export function ConsentDurationSection({
           <Label>Valid To</Label>
           <Input
             type="date"
-            min={dayjs().format("YYYY-MM-DD")}
+            max={dayjs().format("YYYY-MM-DD")}
             value={dateQueryString(toDate)}
             onChange={(e) => onDateChange(e.target.value, "toDate")}
           />
@@ -60,9 +64,13 @@ export function ConsentDurationSection({
           <Input
             type="datetime-local"
             step={1}
-            min={dayjs().format("YYYY-MM-DDTHH:mm")}
+            min={dayjs().format("YYYY-MM-DDTHH:mm:ss")}
             value={dateQueryString(dataEraseAt, true)}
-            onChange={(e) => onDateChange(e.target.value, "dataEraseAt")}
+            onChange={(e) => {
+              console.log(e.target.value);
+              console.log(dateQueryString(e.target.value, true));
+              onDateChange(e.target.value, "dataEraseAt");
+            }}
           />
         </div>
       )}
@@ -180,6 +188,7 @@ export function HipSelector({
   onSelectionChange: (hips: ConsentLinks[]) => void;
   showContexts: boolean;
 }) {
+  const { getHipName } = usePatientLinks();
   const selectedHipsMap = useMemo(
     () => new Map(selectedHips.map((hip) => [hip.hip.id, hip])),
     [selectedHips],
@@ -315,7 +324,7 @@ export function HipSelector({
 
                     <div className="flex-1 min-w-0">
                       <span className="text-sm font-medium block truncate">
-                        {hip.hip.name || "N/A"}
+                        {hip.hip.name || getHipName(hip.hip.id) || "N/A"}
                       </span>
                       {showContexts &&
                         hip.careContexts &&
@@ -336,49 +345,51 @@ export function HipSelector({
 
               {showContexts && hip.careContexts && (
                 <CollapsibleContent className="px-4 pb-4 border-t border-gray-200">
-                  <div className="pt-4 space-y-2">
-                    {hip.careContexts.map((ctx) => {
-                      const isSelected = isContextSelected(
-                        hipId,
-                        ctx.careContextReference,
-                      );
-                      return (
-                        <div
-                          key={ctx.careContextReference}
-                          className={cn(
-                            "flex items-center gap-3 p-3 rounded-md border cursor-pointer transition-all",
-                            isSelected
-                              ? "border-primary/40 bg-primary/5"
-                              : "border-gray-200 hover:border-gray-200 hover:bg-gray-50",
-                          )}
-                          onClick={() =>
-                            toggleContext(hip, ctx.careContextReference)
-                          }
-                        >
+                  <ScrollArea>
+                    <div className="pt-4 space-y-2 max-h-[350px]">
+                      {hip.careContexts.map((ctx) => {
+                        const isSelected = isContextSelected(
+                          hipId,
+                          ctx.careContextReference,
+                        );
+                        return (
                           <div
+                            key={ctx.careContextReference}
                             className={cn(
-                              "size-5 rounded border-2 transition-all flex items-center justify-center",
+                              "flex items-center gap-3 p-3 rounded-md border cursor-pointer transition-all",
                               isSelected
-                                ? "bg-primary border-primary text-white"
-                                : "border-gray-300",
+                                ? "border-primary/40 bg-primary/5"
+                                : "border-gray-200 hover:border-gray-200 hover:bg-gray-50",
                             )}
+                            onClick={() =>
+                              toggleContext(hip, ctx.careContextReference)
+                            }
                           >
-                            {isSelected && <Check className="size-3" />}
+                            <div
+                              className={cn(
+                                "size-5 rounded border-2 transition-all flex items-center justify-center",
+                                isSelected
+                                  ? "bg-primary border-primary text-white"
+                                  : "border-gray-300",
+                              )}
+                            >
+                              {isSelected && <Check className="size-3" />}
+                            </div>
+                            <span
+                              className={cn(
+                                "text-sm",
+                                isSelected
+                                  ? "text-primary font-medium"
+                                  : "text-gray-700",
+                              )}
+                            >
+                              {ctx.display || ctx.careContextReference}
+                            </span>
                           </div>
-                          <span
-                            className={cn(
-                              "text-sm",
-                              isSelected
-                                ? "text-primary font-medium"
-                                : "text-gray-700",
-                            )}
-                          >
-                            {ctx.display || ctx.careContextReference}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
+                  </ScrollArea>
                 </CollapsibleContent>
               )}
             </div>

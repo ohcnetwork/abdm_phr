@@ -25,7 +25,7 @@ import {
   isSubscription,
 } from "@/types/consent";
 import { SubscriptionCategories } from "@/types/subscription";
-import { toIsoUtcString } from "@/utils";
+import { toIsoString } from "@/utils";
 
 interface EditConsentSheetProps {
   open: boolean;
@@ -161,7 +161,7 @@ export default function EditConsentSheet({
   ) => {
     setFormData((prev) => ({
       ...prev,
-      [key]: toIsoUtcString(date),
+      [key]: toIsoString(date),
     }));
   };
 

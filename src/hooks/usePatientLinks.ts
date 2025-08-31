@@ -6,6 +6,7 @@ interface PatientLinksContextType {
   patientLinks: PatientLink[];
   isLoading: boolean;
   isError: boolean;
+  getHipName: (hip_id: string) => string | undefined;
 }
 
 export const PatientLinksContext =

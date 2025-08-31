@@ -1,8 +1,8 @@
 import {
+  BookMarked,
   CircleCheckIcon,
   Link2Icon,
   SquarePen,
-  Star,
   TriangleAlert,
 } from "lucide-react";
 import { useState } from "react";
@@ -51,7 +51,7 @@ function PreferredBadge({ isPreferred }: { isPreferred: boolean }) {
           variant="outline"
           className="flex items-center mt-0.5 bg-blue-50 text-blue-600 border-blue-200"
         >
-          <Star className="size-3" aria-hidden="true" />
+          <BookMarked className="size-3" aria-hidden="true" />
           Preferred
         </Badge>
       </TooltipTrigger>
@@ -126,7 +126,7 @@ function ProfileHeader({
       />
 
       <div className="flex-1 min-w-0">
-        <div className="space-y-2">
+        <div className="space-y-2 w-fit">
           <div>
             <Tooltip>
               <TooltipTrigger asChild>

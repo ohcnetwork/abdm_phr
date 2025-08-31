@@ -20,12 +20,18 @@ export default function PatientLinksProvider({ children }: Props) {
     retry: false,
   });
 
+  const getHipName = (hip_id: string) => {
+    const hip = patientLinks?.find((link) => link.hip.id === hip_id);
+    return hip?.hip.name;
+  };
+
   return (
     <PatientLinksContext.Provider
       value={{
         patientLinks: patientLinks ?? [],
         isLoading,
         isError,
+        getHipName,
       }}
     >
       {children}

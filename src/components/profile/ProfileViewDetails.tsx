@@ -105,7 +105,7 @@ export const BasicInfo = (user: PhrProfile) => {
           value={user.middleName}
         />
         <LabelValue id="last_name" label="Last Name" value={user.lastName} />
-        {user.dateOfBirth ? (
+        {user.dateOfBirth && user.dateOfBirth.includes("-") ? (
           <LabelValue
             id="date_of_birth"
             label="Date of Birth"

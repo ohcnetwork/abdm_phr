@@ -43,12 +43,12 @@ export const dateQueryString = (
   }
 
   if (!parsed.isValid()) return "";
-  return parsed.format(withTime ? "YYYY-MM-DD HH:mm:ss" : "YYYY-MM-DD");
+  return parsed.format(withTime ? "YYYY-MM-DDTHH:mm:ss" : "YYYY-MM-DD");
 };
 
-export const toIsoUtcString = (date: DateLike): string => {
+export const toIsoString = (date: DateLike): string => {
   if (!date || !dayjs(date).isValid()) return "";
-  return dayjs.utc(date).toISOString();
+  return dayjs(date).toISOString();
 };
 
 export const formatReadableDateTime = (

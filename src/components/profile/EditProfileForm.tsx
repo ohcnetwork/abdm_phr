@@ -93,8 +93,6 @@ export default function EditProfileForm({
     },
   });
 
-  console.log(form.getValues());
-
   const onSubmit = (values: FormData) => {
     const [year = "", month = "", day = ""] = dateQueryString(
       values.date_of_birth,
