@@ -26,12 +26,6 @@ interface ArchiveError {
   archived_reason: string;
 }
 
-const tempArchiveError: ArchiveError = {
-  is_archived: true,
-  archived_time: "2025-01-01",
-  archived_reason: "Test reason",
-};
-
 function isArchiveError(err: unknown): err is ArchiveError {
   return (
     typeof err === "object" &&
@@ -171,7 +165,7 @@ const LinkedRecordDetail = ({ hip_id }: LinkedRecordDetailProps) => {
   if (archiveError) {
     return (
       <Wrapper>
-        <ArchivedRecordCard error={tempArchiveError} />
+        <ArchivedRecordCard error={archiveError} />
       </Wrapper>
     );
   }
