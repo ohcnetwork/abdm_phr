@@ -1,16 +1,18 @@
 import { PhrProfile } from "@/types/profile";
 
+interface ProfileColumnsProps {
+  heading: string;
+  note: string;
+  Child: (childProps: PhrProfile) => React.ReactNode | undefined;
+  childProps: PhrProfile;
+}
+
 export default function ProfileColumns({
   heading,
   note,
   Child,
   childProps,
-}: {
-  heading: string;
-  note: string;
-  Child: (childProps: PhrProfile) => React.ReactNode | undefined;
-  childProps: PhrProfile;
-}) {
+}: ProfileColumnsProps) {
   return (
     <section
       className="flex flex-col gap-5 sm:flex-row"

@@ -228,7 +228,6 @@ function ConsentActionButtons({
 
         {actions.canEnable && (
           <Button
-            variant="default"
             size="lg"
             className="sm:w-auto"
             onClick={() => onAction("enable")}
@@ -347,6 +346,7 @@ export default function ConsentDetail({ id, type }: ConsentDetailProps) {
     } else {
       setEditedData(updatedData);
       toast.success("Changes saved successfully.");
+      setActiveDialog(null);
     }
   };
 

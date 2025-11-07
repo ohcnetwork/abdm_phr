@@ -1,6 +1,7 @@
 import { Hospital } from "lucide-react";
 import { Link } from "raviger";
 
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { PatientLink } from "@/types/gateway";
@@ -10,24 +11,40 @@ interface LinkedFacilityCardProps {
 }
 
 export default function LinkedFacilityCard({ data }: LinkedFacilityCardProps) {
+  const recordCount = data.careContexts.length;
+
   return (
-    <Link
-      href={`/linked-facilities/${data.hip.id}`}
-      className="block h-[160px] hover:scale-[1.02] transition-transform"
-    >
-      <Card className="gap-2 h-full border  transition-colors rounded-xl shadow-sm">
-        <CardHeader className="flex items-center gap-3 pb-2">
-          <div className="p-2 bg-primary-100 rounded-lg">
-            <Hospital className="w-6 h-6 text-primary" />
+    <Link href={`/linked-facilities/${data.hip.id}`} className="block">
+      <Card className="h-full hover:shadow-md transition-shadow rounded-xl border hover:border-primary/20">
+        <CardHeader>
+          <div className="flex items-center gap-1 min-w-0 flex-1">
+            <div className="p-2.5 bg-primary-50 rounded-lg flex-shrink-0">
+              <Hospital className="size-5 text-primary" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <CardTitle className="text-base font-semibold text-gray-900 line-clamp-2 leading-tight">
+                {data.hip.name}
+              </CardTitle>
+            </div>
           </div>
-          <CardTitle className="text-lg font-medium text-gray-800 line-clamp-1">
-            {data.hip.name}
-          </CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-1 text-sm text-gray-600">
-          <div>
-            <span className="font-medium text-gray-700">Patient ID:</span>{" "}
-            {data.careContexts[0].patientReference}
+
+        <CardContent className="pt-0">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                Patient Reference
+              </span>
+              <Badge variant="outline" className="text-xs">
+                {recordCount} {recordCount === 1 ? "Context" : "Contexts"}
+              </Badge>
+            </div>
+
+            <div className="bg-gray-50 px-3 py-2 rounded-lg border">
+              <p className="text-sm font-mono text-gray-700">
+                {data.careContexts[0].patientReference}
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>

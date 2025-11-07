@@ -72,7 +72,7 @@ export default function AutoApprovalConfirmDialog({
           <Button
             variant={isEnable ? "primary" : "destructive"}
             disabled={updateMutation.isPending}
-            onClick={() => updateMutation.mutate({ enable: !isEnable })}
+            onClick={() => updateMutation.mutate({ enable: isEnable })}
           >
             {updateMutation.isPending ? (
               <>

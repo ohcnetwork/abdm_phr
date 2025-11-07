@@ -116,7 +116,10 @@ export default function AuthUserProvider({
 
       TokenStorage.clear();
 
-      await queryClient.resetQueries({ queryKey: ["user"] });
+      await Promise.all([
+        queryClient.resetQueries({ queryKey: ["user"] }),
+        queryClient.resetQueries({ queryKey: ["patientLinks"] }),
+      ]);
 
       navigate("/login");
     },

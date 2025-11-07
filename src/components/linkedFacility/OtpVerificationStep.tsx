@@ -80,7 +80,7 @@ const OtpVerificationStep = ({
     useUserInitLinkingFlow<UserInitLinkingConfirmRequest>({
       mutationFn: mutate(routes.linkedFacility.confirm),
       onSuccess: () => {
-        toast.success("Successfully linked to the facility");
+        toast.success("Successfully linked the facility");
         setStep(4);
       },
     });

@@ -9,12 +9,14 @@ import { Separator } from "@/components/ui/separator";
 
 import Page from "@/components/common/Page";
 
-import { CardListSkeleton } from "@/common/loaders/SkeletonLoader";
+import { usePatientLinks } from "@/hooks/usePatientLinks";
+
+import { CardGridSkeleton } from "@/common/loaders/SkeletonLoader";
 
 import routes from "@/api";
 import { query } from "@/utils/request/request";
 
-interface MyRecordDetailProps {
+interface LinkedRecordDetailProps {
   hip_id: string;
 }
 
@@ -34,7 +36,14 @@ function isArchiveError(err: unknown): err is ArchiveError {
   );
 }
 
-function MyRecordDetailHeader({ title }: { title?: string }) {
+function LinkedRecordDetailHeader({
+  recordCount,
+  hip_id,
+}: {
+  hip_id: string;
+  recordCount?: number;
+}) {
+  const { getHipName } = usePatientLinks();
   return (
     <div className="space-y-4">
       <Button
@@ -50,13 +59,15 @@ function MyRecordDetailHeader({ title }: { title?: string }) {
         <div className="p-2 bg-primary/10 rounded-lg">
           <FileText className="size-6 text-primary" />
         </div>
-        <div>
+        <div className="flex-1">
           <h1 className="text-2xl font-bold text-foreground">
-            {title || "Health Record"}
+            {getHipName(hip_id) || "Linked Facility"}
           </h1>
-          <p className="text-muted-foreground">
-            View your health record details
-          </p>
+          {recordCount && recordCount > 0 && (
+            <p className="text-muted-foreground">
+              {recordCount} {recordCount === 1 ? "record" : "records"} available
+            </p>
+          )}
         </div>
       </div>
 
@@ -103,8 +114,7 @@ function ErrorFallback() {
       </CardHeader>
       <CardContent className="text-red-700">
         <p className="text-sm">
-          The health record could not be fetched. Please try again later or
-          contact support if the issue persists.
+          The health record could not be fetched. Please try again later.
         </p>
         <p className="text-xs mt-2 text-red-600">Status: Waiting for record</p>
       </CardContent>
@@ -112,9 +122,9 @@ function ErrorFallback() {
   );
 }
 
-const MyRecordDetail = ({ hip_id }: MyRecordDetailProps) => {
+const LinkedRecordDetail = ({ hip_id }: LinkedRecordDetailProps) => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["myRecordDetail", hip_id],
+    queryKey: ["linkedRecordDetail", hip_id],
     queryFn: query(routes.dashboard.getLinkedRecord, {
       pathParams: { id: hip_id },
     }),
@@ -135,7 +145,10 @@ const MyRecordDetail = ({ hip_id }: MyRecordDetailProps) => {
   const Wrapper = ({ children }: { children: React.ReactNode }) => (
     <Page title="Health Record" hideTitleOnPage>
       <div className="container mx-auto max-w-4xl space-y-6">
-        <MyRecordDetailHeader />
+        <LinkedRecordDetailHeader
+          recordCount={data?.data?.length}
+          hip_id={hip_id}
+        />
         {children}
       </div>
     </Page>
@@ -144,7 +157,7 @@ const MyRecordDetail = ({ hip_id }: MyRecordDetailProps) => {
   if (isLoading) {
     return (
       <Wrapper>
-        <CardListSkeleton count={3} />
+        <CardGridSkeleton count={4} />
       </Wrapper>
     );
   }
@@ -184,16 +197,6 @@ const MyRecordDetail = ({ hip_id }: MyRecordDetailProps) => {
   return (
     <Wrapper>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-foreground">
-            Health Information
-          </h2>
-          <span className="text-sm text-muted-foreground">
-            {data?.data?.length}{" "}
-            {data?.data?.length === 1 ? "record" : "records"}
-          </span>
-        </div>
-
         <div className="space-y-4">
           {data?.data?.map((record) => {
             const parsedData = parseHealthData(record.content);
@@ -217,14 +220,10 @@ const MyRecordDetail = ({ hip_id }: MyRecordDetailProps) => {
             }
 
             return (
-              <Card
+              <HIProfile
                 key={record.care_context_reference}
-                className="overflow-hidden"
-              >
-                <CardContent className="p-0">
-                  <HIProfile bundle={parsedData} />
-                </CardContent>
-              </Card>
+                bundle={parsedData}
+              />
             );
           })}
         </div>
@@ -233,4 +232,4 @@ const MyRecordDetail = ({ hip_id }: MyRecordDetailProps) => {
   );
 };
 
-export default MyRecordDetail;
+export default LinkedRecordDetail;

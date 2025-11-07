@@ -243,7 +243,7 @@ type AddBasicDetailsProps = InjectedStepProps<FormMemory>;
 
 const AddBasicDetails = ({ memory, setMemory, goTo }: AddBasicDetailsProps) => {
   const schema = z.object({
-    first_name: z.string().trim().min(2, "First name is required"),
+    first_name: z.string().trim().min(2, "First name is too short"),
     middle_name: z.string().trim().optional(),
     last_name: z.string().trim().optional(),
     gender: z.enum(GENDERS, {

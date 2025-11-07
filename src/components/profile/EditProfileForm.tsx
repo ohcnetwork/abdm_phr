@@ -69,7 +69,11 @@ export default function EditProfileForm({
       middle_name: userData.middleName || "",
       last_name: userData.lastName || "",
       gender: userData.gender,
-      date_of_birth: dateQueryString(userData.dateOfBirth),
+      date_of_birth:
+        dateQueryString(userData.dateOfBirth) ||
+        `${userData.yearOfBirth}-${userData.monthOfBirth || "01"}-${
+          userData.dayOfBirth || "01"
+        }`,
       state_code: Number(userData.stateCode),
       district_code: Number(userData.districtCode),
       state_name: userData.stateName,
@@ -96,9 +100,9 @@ export default function EditProfileForm({
 
     updateProfileMutation.mutate({
       ...values,
-      year_of_birth: year,
-      month_of_birth: month,
-      day_of_birth: day,
+      year_of_birth: year || userData.yearOfBirth,
+      month_of_birth: month || userData.monthOfBirth || "",
+      day_of_birth: day || userData.dayOfBirth || "",
       state_code: values.state_code.toString(),
       district_code: values.district_code.toString(),
       profile_photo: userData.profilePhoto,

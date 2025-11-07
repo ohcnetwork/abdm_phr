@@ -171,8 +171,8 @@ const DiscoverRecordsStep = ({
                       {careContexts.length > 1 && "s"}
                     </span>
                   </div>
-                  <ScrollArea className="max-h-[300px]">
-                    <div className="p-4 space-y-2">
+                  <ScrollArea>
+                    <div className="p-4 space-y-2 max-h-[350px]">
                       {careContexts.map(({ display, referenceNumber }) => {
                         const isChecked = updatedPatient[
                           patientIndex

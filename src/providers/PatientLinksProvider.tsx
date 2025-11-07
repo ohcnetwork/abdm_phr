@@ -15,10 +15,15 @@ export default function PatientLinksProvider({ children }: Props) {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["patientinks"],
+    queryKey: ["patientLinks"],
     queryFn: query(routes.gateway.listPatientLinks, { silent: true }),
     retry: false,
   });
+
+  const getHipName = (hip_id: string) => {
+    const hip = patientLinks?.find((link) => link.hip.id === hip_id);
+    return hip?.hip.name;
+  };
 
   return (
     <PatientLinksContext.Provider
@@ -26,6 +31,7 @@ export default function PatientLinksProvider({ children }: Props) {
         patientLinks: patientLinks ?? [],
         isLoading,
         isError,
+        getHipName,
       }}
     >
       {children}

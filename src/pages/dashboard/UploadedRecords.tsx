@@ -74,6 +74,7 @@ const UploadedRecords = () => {
   const isEmpty =
     !filesLoading && (!files?.results || files.results.length === 0);
   const isError = !!error;
+  const totalCount = files?.count || 0;
 
   return (
     <div className="space-y-4">
@@ -146,22 +147,20 @@ const UploadedRecords = () => {
         <UploadedRecordList files={files.results} fileUpload={fileUpload} />
       )}
 
-      {files?.count &&
-        files.count > UPLOADED_RECORDS_LIMIT &&
-        !filesLoading && (
-          <div className="flex justify-center">
-            <Pagination
-              data={{ totalCount: files?.count || 0 }}
-              onChange={(page) => {
-                updateQuery({
-                  page,
-                });
-              }}
-              defaultPerPage={UPLOADED_RECORDS_LIMIT}
-              cPage={params.page}
-            />
-          </div>
-        )}
+      {totalCount > UPLOADED_RECORDS_LIMIT && !filesLoading && (
+        <div className="flex justify-center">
+          <Pagination
+            data={{ totalCount }}
+            onChange={(page) => {
+              updateQuery({
+                page,
+              });
+            }}
+            defaultPerPage={UPLOADED_RECORDS_LIMIT}
+            cPage={params.page}
+          />
+        </div>
+      )}
     </div>
   );
 };

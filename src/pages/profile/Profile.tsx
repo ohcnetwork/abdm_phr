@@ -1,11 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
 import {
+  BookMarked,
   CircleCheckIcon,
   Link2Icon,
   SquarePen,
   TriangleAlert,
 } from "lucide-react";
 import { useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,8 +20,7 @@ import {
 
 import { Avatar } from "@/components/common/Avatar";
 import Page from "@/components/common/Page";
-import AbhaUnlinkDialog from "@/components/profile/AbhaUnlinkDialog";
-import DownloadAbhaDialog from "@/components/profile/DownloadAbhaDialog";
+import AutoApprovalSetup from "@/components/profile/AutoApprovalSetup";
 import EditProfileSheet from "@/components/profile/EditProfileSheet";
 import ProfileActions from "@/components/profile/ProfileActions";
 import ProfileColumns from "@/components/profile/ProfileColumns";
@@ -29,33 +30,53 @@ import {
   LocationInfo,
 } from "@/components/profile/ProfileViewDetails";
 import ResetPassword from "@/components/profile/ResetPassword";
-import SelectPreferredAbhaDialog from "@/components/profile/SelectPreferredAbhaDialog";
-import SwitchProfileDialog from "@/components/profile/SwitchProfileDialog";
-import UpdateEmailDialog from "@/components/profile/UpdateEmailDialog";
-import UpdateMobileDialog from "@/components/profile/UpdateMobileDialog";
 import UserAvatar from "@/components/profile/UserAvatar";
+import AbhaUnlinkDialog from "@/components/profile/dialogs/AbhaUnlinkDialog";
+import DownloadAbhaDialog from "@/components/profile/dialogs/DownloadAbhaDialog";
+import SelectPreferredAbhaDialog from "@/components/profile/dialogs/SelectPreferredAbhaDialog";
+import SwitchProfileDialog from "@/components/profile/dialogs/SwitchProfileDialog";
 
 import { useAuthContext } from "@/hooks/useAuth";
 
-import routes from "@/api";
 import { KycStatuses, PhrProfile } from "@/types/profile";
 import { getProfilePhotoUrl } from "@/utils";
-import { query } from "@/utils/request/request";
+
+function PreferredBadge({ isPreferred }: { isPreferred: boolean }) {
+  if (!isPreferred) return null;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Badge
+          variant="outline"
+          className="flex items-center mt-0.5 bg-blue-50 text-blue-600 border-blue-200"
+        >
+          <BookMarked className="size-3" aria-hidden="true" />
+          Preferred
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="text-white">
+        Preferred ABHA Address
+      </TooltipContent>
+    </Tooltip>
+  );
+}
 
 function KYCStatusBadge({ isVerified }: { isVerified: boolean }) {
   return (
     <Badge
       variant="outline"
-      className={`flex items-center whitespace-nowrap mt-0.5 ${
+      className={cn(
+        "flex items-center mt-0.5",
         isVerified
           ? "bg-green-50 text-primary-500 border-primary-200"
-          : "bg-yellow-50 text-warning-500 border-yellow-200"
-      }`}
+          : "bg-yellow-50 text-warning-500 border-yellow-200",
+      )}
     >
       {isVerified ? (
-        <CircleCheckIcon className="h-3 w-3 mr-2" aria-hidden="true" />
+        <CircleCheckIcon className="size-3" aria-hidden="true" />
       ) : (
-        <TriangleAlert className="h-3 w-3 mr-2" aria-hidden="true" />
+        <TriangleAlert className="size-3" aria-hidden="true" />
       )}
       <span>{isVerified ? "KYC Verified" : "Self Declared"}</span>
     </Badge>
@@ -97,31 +118,44 @@ function ProfileHeader({
   isKYCVerified: boolean;
 }) {
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex gap-4 items-start">
       <Avatar
         imageUrl={getProfilePhotoUrl(userData.profilePhoto)}
-        name={userData.abhaAddress}
-        className="size-20 shrink-0 max-sm:size-23"
+        name={userData.fullName}
+        className="size-27 shrink-0 sm:size-24"
       />
 
-      <div className="flex gap-1 items-start flex-wrap">
-        <div className="flex flex-col  space-x-2 gap-1">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <h1 className="text-xl font-bold truncate">
+      <div className="flex-1 min-w-0">
+        <div className="space-y-2 w-fit">
+          <div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <h1 className="text-lg sm:text-xl font-bold truncate">
+                  {userData.abhaAddress}
+                </h1>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="text-white">
                 {userData.abhaAddress}
-              </h1>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="text-white">
-              {userData.abhaAddress}
-            </TooltipContent>
-          </Tooltip>
-          <AbhaNumberDisplay
-            isKYCVerified={isKYCVerified}
-            abhaNumber={userData.abhaNumber}
-          />
+              </TooltipContent>
+            </Tooltip>
+
+            <div className="mt-1">
+              <AbhaNumberDisplay
+                isKYCVerified={isKYCVerified}
+                abhaNumber={userData.abhaNumber}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <KYCStatusBadge isVerified={isKYCVerified} />
+            <PreferredBadge
+              isPreferred={
+                userData.preferredAbhaAddress === userData.abhaAddress
+              }
+            />
+          </div>
         </div>
-        <KYCStatusBadge isVerified={isKYCVerified} />
       </div>
     </div>
   );
@@ -191,25 +225,12 @@ function AbhaManagementSection({
 export default function Profile() {
   const { user, switchProfileEnabled } = useAuthContext();
 
-  const {
-    data: healthIdData,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["healthIdData"],
-    queryFn: query(routes.profile.healthIdData),
-  });
-
-  console.log(healthIdData, isLoading, isError);
-
   const [modals, setModals] = useState({
     editProfile: false,
     switchProfile: false,
     selectPreferredAbha: false,
     downloadAbha: false,
     abhaUnlink: false,
-    updateMobile: false,
-    updateEmail: false,
   });
 
   const toggleModal = (modalName: keyof typeof modals) => {
@@ -218,14 +239,6 @@ export default function Profile() {
 
   const isKYCVerified = user?.kycStatus === KycStatuses.VERIFIED;
 
-  const ContactInfoWithHandlers = (user: PhrProfile) => (
-    <ContactInfo
-      user={user}
-      setShowUpdateMobile={() => toggleModal("updateMobile")}
-      setShowUpdateEmail={() => toggleModal("updateEmail")}
-    />
-  );
-
   if (!user) {
     return null;
   }
@@ -233,10 +246,8 @@ export default function Profile() {
   return (
     <Page title="ABHA Profile" hideTitleOnPage>
       <div className="mx-auto space-y-8">
-        {/* Profile Header */}
         <ProfileHeader userData={user} isKYCVerified={isKYCVerified} />
 
-        {/* Profile Actions */}
         <div className="flex gap-3 justify-end flex-wrap">
           <Button
             variant="outline"
@@ -258,11 +269,10 @@ export default function Profile() {
           />
         </div>
 
-        {/* Profile Sections */}
         <div className="space-y-8">
           <ProfileColumns
-            heading="Profile Picture"
-            note="Upload and manage your profile picture."
+            heading="Edit Avatar"
+            note="View or update your profile picture."
             Child={UserAvatar}
             childProps={user}
           />
@@ -276,34 +286,39 @@ export default function Profile() {
 
           <ProfileColumns
             heading="Contact Information"
-            note="Manage your contact details for communication."
-            Child={ContactInfoWithHandlers}
+            note="View or update your contact information."
+            Child={ContactInfo}
             childProps={user}
           />
 
           <ProfileColumns
             heading="Location Information"
-            note="Your address and location details for service delivery."
+            note="View or update your address and location details."
             Child={LocationInfo}
             childProps={user}
           />
 
           <ProfileColumns
+            heading="Auto Approval"
+            note="Set up and manage auto approval of consent requests."
+            Child={AutoApprovalSetup}
+            childProps={user}
+          />
+
+          <ProfileColumns
             heading="Security"
-            note="Manage your account password and security settings."
+            note="Set a new password or update the current one."
             Child={ResetPassword}
             childProps={user}
           />
         </div>
 
-        {/* ABHA Management Section */}
         <AbhaManagementSection
           isKYCVerified={isKYCVerified}
           onAction={() => toggleModal("abhaUnlink")}
         />
       </div>
 
-      {/* All Modals */}
       <EditProfileSheet
         open={modals.editProfile}
         setOpen={() => toggleModal("editProfile")}
@@ -315,21 +330,12 @@ export default function Profile() {
         open={modals.switchProfile}
         setOpen={() => toggleModal("switchProfile")}
         currentAbhaAddress={user.abhaAddress}
+        preferredAbhaAddress={user.preferredAbhaAddress || ""}
       />
 
       <DownloadAbhaDialog
         open={modals.downloadAbha}
         setOpen={() => toggleModal("downloadAbha")}
-      />
-
-      <UpdateMobileDialog
-        open={modals.updateMobile}
-        setOpen={() => toggleModal("updateMobile")}
-      />
-
-      <UpdateEmailDialog
-        open={modals.updateEmail}
-        setOpen={() => toggleModal("updateEmail")}
       />
 
       <SelectPreferredAbhaDialog

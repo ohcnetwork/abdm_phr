@@ -5,6 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 import ErrorBoundary from "@/components/errors/ErrorBoundary";
 import FallbackErrorPage from "@/components/errors/FallbackErrorPage";
+import SessionExpired from "@/components/errors/SessionExpired";
 
 import useSidebarState from "@/hooks/useSidebarState";
 
@@ -56,6 +57,8 @@ const Routes: AppRoutes = {
   "/": () => <Redirect to="/my-records/linked" />,
   "/login": () => <Redirect to="/my-records/linked" />,
   "/register": () => <Redirect to="/my-records/linked" />,
+
+  "/session-expired": () => <SessionExpired />,
 };
 
 export default function PrivateRouter() {

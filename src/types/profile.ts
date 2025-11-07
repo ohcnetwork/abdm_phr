@@ -64,7 +64,7 @@ export interface PhrProfile {
   middleName: string | null;
   lastName: string | null;
   gender: Gender;
-  dateOfBirth: string;
+  dateOfBirth?: string | null;
   dayOfBirth: string | null;
   monthOfBirth: string | null;
   yearOfBirth: string;

@@ -9,12 +9,14 @@ import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
@@ -25,7 +27,7 @@ interface AbhaAddressSelectorProps {
   isListLoading?: boolean;
   isActionLoading: boolean;
   defaultSelectedAddress?: string;
-
+  preferredAbhaAddress: string;
   onContinue: (selectedAddress: string) => void;
   onCreateNew?: () => void;
 
@@ -50,11 +52,13 @@ function AddressItem({
   selected,
   onSelect,
   kycStatus,
+  isPreferredAbhaAddress,
 }: {
   address: string;
   selected: boolean;
   onSelect: (address: string) => void;
   kycStatus: KycStatuses;
+  isPreferredAbhaAddress: boolean;
 }) {
   return (
     <div
@@ -81,7 +85,31 @@ function AddressItem({
       >
         {selected && <Check className="size-3 text-white" />}
       </div>
-      <div className="font-mono truncate flex-1">{address}</div>
+      <div className="font-mono truncate flex-1 flex items-center gap-1">
+        {address}
+        {isPreferredAbhaAddress && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge
+                  variant="outline"
+                  className={cn(
+                    "text-xs px-1.5 pt-0.5 cursor-default ml-1 font-medium",
+                    selected
+                      ? "bg-white text-blue-700 border-blue-300"
+                      : "bg-blue-50 text-blue-700 border-blue-200",
+                  )}
+                >
+                  P
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="text-xs text-white">
+                Preferred ABHA Address
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+      </div>
 
       <div className="flex-shrink-0">
         <Tooltip>
@@ -117,6 +145,7 @@ export default function AbhaAddressSelector({
   continueLabel = "Continue",
   showCreateNew = false,
   emptyState,
+  preferredAbhaAddress,
 }: AbhaAddressSelectorProps) {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
 
@@ -152,6 +181,7 @@ export default function AbhaAddressSelector({
         selected={abhaAddress === selectedAddress}
         onSelect={setSelectedAddress}
         kycStatus={kycStatus}
+        isPreferredAbhaAddress={preferredAbhaAddress === abhaAddress}
       />
     ));
   };

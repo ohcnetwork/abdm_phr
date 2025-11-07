@@ -27,7 +27,9 @@ const UpdateMobileDialog = ({ open, setOpen }: UpdateMobileDialogProps) => {
 
   const handleOtpSuccess = () => {
     setOpen(false);
-    toast.success("Mobile number updated successfully. Please login again.");
+    toast.success(
+      "Your mobile number was updated. Please log in again to continue.",
+    );
     logout(false);
   };
 
