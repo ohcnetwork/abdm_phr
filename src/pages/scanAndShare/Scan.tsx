@@ -87,7 +87,7 @@ export default function Scan() {
     );
   }, []);
 
-  const { data: allTokens } = useQuery({
+  const { data: allTokens, isLoading: isLoadingTokens } = useQuery({
     queryKey: ["allShareTokens"],
     queryFn: query(routes.gateway.listSharedProfileTokens, { silent: true }),
   });
@@ -113,8 +113,19 @@ export default function Scan() {
   }, [allTokens]);
 
   useEffect(() => {
-    if (!parsed || !processedTokens.length) return;
+    // Don't show popup if parsed is not available
+    if (!parsed) {
+      setShowConsentModal(false);
+      setShowTokenModal(false);
+      return;
+    }
 
+    // Wait for tokens to load before deciding which modal to show
+    if (isLoadingTokens) {
+      return;
+    }
+
+    // After tokens are loaded, check for matching token
     const activeMatchingToken = processedTokens.find(
       (token) => token.isActive && token.hipId === parsed.hipId,
     );
@@ -127,7 +138,7 @@ export default function Scan() {
       setShowConsentModal(true);
       setShowTokenModal(false);
     }
-  }, [parsed, processedTokens]);
+  }, [parsed, processedTokens, isLoadingTokens]);
 
   useEffect(() => {
     let stream: MediaStream | null = null;
