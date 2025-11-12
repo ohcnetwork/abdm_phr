@@ -10,6 +10,7 @@ import {
   Shield,
   User,
 } from "lucide-react";
+import { QrCode } from "lucide-react";
 import { ActiveLink, navigate, useLocationChange } from "raviger";
 
 import { cn } from "@/lib/utils";
@@ -150,6 +151,26 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              tooltip={{
+                children: "Scan QR",
+                className: "text-white",
+              }}
+              className="text-gray-600 transition font-normal hover:bg-gray-200 hover:text-green-700 mb-2"
+            >
+              <ActiveLink
+                href="/scan-and-share"
+                activeClass="bg-white text-green-700 shadow-sm relative"
+              >
+                <QrCode />
+                <span className="ml-1 group-data-[collapsible=icon]:hidden">
+                  Scan QR
+                </span>
+              </ActiveLink>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

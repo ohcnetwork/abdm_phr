@@ -21,6 +21,7 @@ import LinkedFacility from "@/pages/linkedFacility/LinkedFacility";
 import LinkedFacilityDetail from "@/pages/linkedFacility/LinkedFacilityDetail";
 import Notifications from "@/pages/notification/Notification";
 import Profile from "@/pages/profile/Profile";
+import ScanAndShare from "@/pages/scanAndShare/ScanAndShare";
 import PatientLinksProvider from "@/providers/PatientLinksProvider";
 import { ConsentTypes } from "@/types/consent";
 
@@ -53,6 +54,7 @@ const Routes: AppRoutes = {
   "/health-lockers/:id": ({ id }) => <HealthLockerDetail id={id} />,
 
   "/notifications": () => <Notifications />,
+  "/scan-and-share": () => <ScanAndShare />,
 
   "/": () => <Redirect to="/my-records/linked" />,
   "/login": () => <Redirect to="/my-records/linked" />,
@@ -66,6 +68,7 @@ export default function PrivateRouter() {
 
   const sidebarOpen = useSidebarState();
   const showSidebar = !PAGES_WITHOUT_SIDEBAR.includes(location.pathname);
+  const isScanSharePage = location.pathname === "/scan-share";
 
   return (
     <PatientLinksProvider>
@@ -74,17 +77,23 @@ export default function PrivateRouter() {
 
         <main
           id="pages"
-          className="flex flex-col flex-1 max-w-full min-h-[calc(100svh-(--spacing(4)))] md:m-2 md:peer-data-[state=collapsed]:ml-0 border border-gray-200 rounded-lg shadow-sm bg-gray-50 focus:outline-hidden"
+          className={`flex flex-col flex-1 max-w-full min-h-[calc(100svh-(--spacing(4)))] ${
+            isScanSharePage
+              ? "md:m-0 border-0 shadow-none"
+              : "md:m-2 md:peer-data-[state=collapsed]:ml-0 border border-gray-200 rounded-lg shadow-sm"
+          } bg-gray-50 focus:outline-hidden`}
         >
-          <div className="relative z-10 flex h-16 bg-white shadow-sm shrink-0 md:hidden">
-            <div className="flex items-center">
-              <SidebarTrigger />
+          {!isScanSharePage && (
+            <div className="relative z-10 flex h-16 bg-white shadow-sm shrink-0 md:hidden">
+              <div className="flex items-center">
+                <SidebarTrigger />
+              </div>
+              <a className="flex items-center w-full h-full md:hidden">
+                <img className="w-40" src={curaLogo} alt="cura logo" />
+              </a>
             </div>
-            <a className="flex items-center w-full h-full md:hidden">
-              <img className="w-40" src={curaLogo} alt="cura logo" />
-            </a>
-          </div>
-          <div className="p-3 mt-4" data-cui-page>
+          )}
+          <div className={isScanSharePage ? "" : "p-3 mt-4"} data-cui-page>
             <ErrorBoundary
               fallback={<FallbackErrorPage forError="PAGE_LOAD_ERROR" />}
             >

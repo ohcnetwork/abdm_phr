@@ -119,6 +119,7 @@ const HandleExistingAbhaAddress = ({
           showCreateNew={flowType === AuthFlowTypes.ENROLLMENT}
           onCreateNew={handleCreateNew}
           emptyState={<AuthEmptyState />}
+          preferredAbhaAddress={""}
         />
       </CardContent>
     </Card>

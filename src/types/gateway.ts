@@ -25,3 +25,24 @@ export interface Provider {
   facilityType: string[];
   isGovtEntity: boolean;
 }
+
+export interface ScanAndShareToken {
+  id: number;
+  patientId: string;
+  tokenNumber: string;
+  hipId: string;
+  hipName: string;
+  hipAddress: string;
+  expiresIn: string;
+  clientId: string;
+  dateCreated: string;
+  counterCode: string;
+}
+
+export interface SharePatientProfileRequest {
+  hip_id: string;
+  context: string;
+  hpr_id?: string;
+  latitude?: number;
+  longitude?: number;
+}
