@@ -36,7 +36,7 @@
     "dompurify": "^3.2.6",
     "hi-profiles": "^2.2.0",
     "input-otp": "^1.4.2",
-    "jspdf": "^3.0.1",
+    "jspdf": "^4.0.0",
     "lucide-react": "^0.513.0",
     "next-themes": "^0.4.6",
     "raviger": "^5.0.0-2",
